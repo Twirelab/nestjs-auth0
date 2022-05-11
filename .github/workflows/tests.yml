@@ -19,3 +19,5 @@ jobs:
           node-version: ${{matrix.node-version}}
       - name: Install npm
         run: npm ci
+      - name: Run all tests
+        run: npm run test
