@@ -3,7 +3,7 @@ import { ManagementClientOptions } from "auth0";
 import { getManagementClient } from "../clients/management.client";
 import { ManagementAsyncOptions, ManagementOptionsFactory } from "../auth0.options";
 import { createManagementProvider } from "../providers/management.provider";
-import { MANG_CLIENT, MANG_TOKEN } from "src/constants";
+import { MANG_CLIENT, MANG_MODULE } from "../constants";
 
 @Global()
 @Module({})
@@ -34,8 +34,8 @@ export class ManagementCoreModule {
      */
     static forRootAsync(options: ManagementAsyncOptions): DynamicModule {
         const provider: Provider<any> = {
-            inject: [MANG_CLIENT],
-            provide: MANG_TOKEN,
+            inject: [MANG_MODULE],
+            provide: MANG_CLIENT,
             useFactory: (authOptions: ManagementClientOptions) => getManagementClient(authOptions),
         }
 
@@ -58,7 +58,7 @@ export class ManagementCoreModule {
         if (options.useFactory) {
             return {
                 inject: options.inject ?? [],
-                provide: MANG_CLIENT,
+                provide: MANG_MODULE,
                 useFactory: options.useFactory,
             };
         }
@@ -69,7 +69,7 @@ export class ManagementCoreModule {
                 : options.useClass
                     ? [options.useClass]
                     : [],
-            provide: MANG_CLIENT,
+            provide: MANG_MODULE,
             useFactory: (optionsFactory: ManagementOptionsFactory) => optionsFactory.createAuth0Options(),
         }
     }

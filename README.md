@@ -39,11 +39,11 @@ export class AppModule {}
 Add below code into app.module.js file.
 
 ```typescript
-import { AuthenticationModule } from "@twirelab/nestjs-auth0";
+import { ManagementModule } from "@twirelab/nestjs-auth0";
 
 @Module({
   imports: [
-    AuthenticationModule.forRoot({
+    ManagementModule.forRoot({
       token: '{YOUR_API_V2_TOKEN}',
       domain: '{YOUR_ACCOUNT}.auth0.com',
     }),
@@ -55,11 +55,11 @@ export class AppModule {}
 To obtain **automatically** a Management API token via the ManagementClient, you can specify the parameters `clientId`, `clientSecret` (use a Non Interactive Client) and optionally `scope`. Behind the scenes the Client Credentials Grant is used to obtain the `access_token` and is by default cached for the duration of the returned `expires_in` value.
 
 ```typescript
-import { AuthenticationModule } from "@twirelab/nestjs-auth0";
+import { ManagementModule } from "@twirelab/nestjs-auth0";
 
 @Module({
   imports: [
-    AuthenticationModule.forRoot({
+    ManagementModule.forRoot({
       domain: '{YOUR_ACCOUNT}.auth0.com',
       clientId: '{YOUR_NON_INTERACTIVE_CLIENT_ID}',
       clientSecret: '{YOUR_NON_INTERACTIVE_CLIENT_SECRET}',
