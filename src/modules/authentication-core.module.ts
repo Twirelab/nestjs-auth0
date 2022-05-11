@@ -1,7 +1,7 @@
 import { Global, Module, DynamicModule, Provider, ClassProvider } from "@nestjs/common";
 import { AuthenticationClientOptions } from "auth0";
 import { getAuthenticationClient } from "../clients/authentication.client";
-import { AUTH_CLIENT, AUTH_TOKEN } from "../constants";
+import { AUTH_CLIENT, AUTH_MODULE } from "../constants";
 import { AuthenticationAsyncOptions, AuthenticationOptionsFactory } from "../auth0.options";
 import { createAuthenticationProvider } from "../providers/authentication.provider";
 
@@ -34,8 +34,8 @@ export class AuthenticationCoreModule {
      */
     static forRootAsync(options: AuthenticationAsyncOptions): DynamicModule {
         const provider: Provider<any> = {
-            inject: [AUTH_CLIENT],
-            provide: AUTH_TOKEN,
+            inject: [AUTH_MODULE],
+            provide: AUTH_CLIENT,
             useFactory: (authOptions: AuthenticationClientOptions) => getAuthenticationClient(authOptions),
         }
 
@@ -58,7 +58,7 @@ export class AuthenticationCoreModule {
         if (options.useFactory) {
             return {
                 inject: options.inject ?? [],
-                provide: AUTH_CLIENT,
+                provide: AUTH_MODULE,
                 useFactory: options.useFactory,
             };
         }
@@ -69,7 +69,7 @@ export class AuthenticationCoreModule {
                 : options.useClass
                     ? [options.useClass]
                     : [],
-            provide: AUTH_CLIENT,
+            provide: AUTH_MODULE,
             useFactory: (optionsFactory: AuthenticationOptionsFactory) => optionsFactory.createAuth0Options(),
         }
     }

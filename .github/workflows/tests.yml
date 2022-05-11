@@ -1,0 +1,21 @@
+name: "Test package"
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      - name: "Use Node.js"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: "npm"
+      - name: "Install npm"
+        run: npm ci
+      - name: "Run all tests"
+        run: npm run test
