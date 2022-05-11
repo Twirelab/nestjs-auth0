@@ -1,5 +1,7 @@
 # NestJS Auth0
 
+[![Test package](https://github.com/Twirelab/nestjs-auth0/actions/workflows/tests.yml/badge.svg)](https://github.com/Twirelab/nestjs-auth0/actions/workflows/tests.yml)
+
 NodeJS Auth0 wrapper for Nestjs
 
 ## Install
