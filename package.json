@@ -1,11 +1,14 @@
 {
   "name": "@twirelab/nestjs-auth0",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "",
   "main": "lib/index.js",
   "private": false,
   "types": "lib/index.d.ts",
-  "author": "Twirelab",
+  "author": {
+    "name": "Twirelab",
+    "email": "contact@twirelab.com"
+  },
   "license": "MIT",
   "scripts": {
     "clean": "rimraf lib",
@@ -28,6 +31,8 @@
     "auth0",
     "authentication",
     "management",
+    "nodejs",
+    "express",
     "app",
     "wrapper",
     "client"
