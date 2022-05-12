@@ -6,21 +6,20 @@ NodeJS Auth0 wrapper for Nestjs
 
 ## Install
 ```bash
-npm install @twirelab/nestjs-auth0
+npm i @twirelab/nestjs-auth0 auth0
+npm i -D @types/auth0
 ```
 
 or
 
 ```bash
-yarn install @twirelab/nestjs-auth0
+yarn add @twirelab/nestjs-auth0 auth0
+yarn add -D @types/auth0
 ```
 
-## Usage
-
-### Authentication Client
+## Authentication Client
 
 Add below code into app.module.js file.
-
 ```typescript
 import { AuthenticationModule } from "@twirelab/nestjs-auth0";
 
@@ -36,10 +35,25 @@ import { AuthenticationModule } from "@twirelab/nestjs-auth0";
 export class AppModule {}
 ```
 
-### Management Client
+Now you can inject authentication client into your services, for example:
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectAuthentication } from "@twirelab/nestjs-auth0";
+import { AuthenticationClient, TokenResponse } from "auth0";
+
+@Injectable()
+export class AppService {
+  constructor(@InjectAuthentication() private readonly authentication: AuthenticationClient) { }
+
+  async getCredentialsGrant(): Promise<TokenResponse> {
+    return await this.authentication.clientCredentialsGrant({ audience: "..." });
+  }
+}
+```
+
+## Management Client
 
 Add below code into app.module.js file.
-
 ```typescript
 import { ManagementModule } from "@twirelab/nestjs-auth0";
 
@@ -52,6 +66,22 @@ import { ManagementModule } from "@twirelab/nestjs-auth0";
   ],
 })
 export class AppModule {}
+```
+
+Now you can inject management client into your services, for example:
+```typescript
+import { Injectable } from "@nestjs/common";
+import { InjectManagement } from "@twirelab/nestjs-auth0";
+import { ManagementClient, User } from "auth0";
+
+@Injectable()
+export class AppService {
+  constructor(@InjectManagement() private readonly management: ManagementClient) { }
+
+  async getUsers(): Promise<User[]> {
+    return await this.management.getUsers();
+  }
+}
 ```
 
 To obtain **automatically** a Management API token via the ManagementClient, you can specify the parameters `clientId`, `clientSecret` (use a Non Interactive Client) and optionally `scope`. Behind the scenes the Client Credentials Grant is used to obtain the `access_token` and is by default cached for the duration of the returned `expires_in` value.
