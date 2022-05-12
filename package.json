@@ -1,8 +1,9 @@
 {
   "name": "@twirelab/nestjs-auth0",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "",
   "main": "lib/index.js",
+  "private": false,
   "types": "lib/index.d.ts",
   "author": "Twirelab",
   "license": "MIT",
@@ -15,9 +16,18 @@
     "type": "git",
     "url": "git+https://github.com/Twirelab/nestjs-auth0.git"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "lib"
+  ],
   "keywords": [
     "nestjs",
     "auth0",
+    "authentication",
+    "management",
     "app",
     "wrapper",
     "client"
