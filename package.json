@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/Twirelab/nestjs-auth0#readme",
   "dependencies": {
-    "auth0": "^2.40.0",
+    "auth0": "^2.44.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5"
   },
