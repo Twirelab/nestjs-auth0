@@ -1,4 +1,4 @@
-import { Global, Module, DynamicModule, Provider, ClassProvider } from "@nestjs/common";
+import { Global, Module, DynamicModule, Provider } from "@nestjs/common";
 import { AuthenticationClientOptions } from "auth0";
 import { getAuthenticationClient } from "../clients/authentication.client";
 import { AUTH_CLIENT, AUTH_MODULE } from "../constants";
@@ -8,13 +8,6 @@ import { createAuthenticationProvider } from "../providers/authentication.provid
 @Global()
 @Module({})
 export class AuthenticationCoreModule {
-    /**
-     * For root.
-     * 
-     * @param {AuthenticationClientOptions} options 
-     * 
-     * @return {DynamicModule}
-     */
     public static forRoot(options: AuthenticationClientOptions): DynamicModule {
         const provider = createAuthenticationProvider(options);
 
@@ -22,38 +15,24 @@ export class AuthenticationCoreModule {
             exports: [provider],
             module: AuthenticationCoreModule,
             providers: [provider],
-        }
+        };
     }
 
-    /**
-     * For root async.
-     * 
-     * @param {AuthenticationAsyncOptions} options 
-     * 
-     * @return {DynamicModule} 
-     */
     static forRootAsync(options: AuthenticationAsyncOptions): DynamicModule {
-        const provider: Provider<any> = {
+        const provider: Provider = {
             inject: [AUTH_MODULE],
             provide: AUTH_CLIENT,
             useFactory: (authOptions: AuthenticationClientOptions) => getAuthenticationClient(authOptions),
-        }
+        };
 
         return {
             exports: [provider],
             imports: options.imports,
             module: AuthenticationCoreModule,
             providers: [...this.createAsyncProviders(options), provider],
-        }
+        };
     }
 
-    /**
-     * Create async options provider.
-     * 
-     * @param {AuthenticationAsyncOptions} options 
-     * 
-     * @return {Provider}
-     */
     private static createAsyncOptionsProvider(options: AuthenticationAsyncOptions): Provider {
         if (options.useFactory) {
             return {
@@ -61,38 +40,29 @@ export class AuthenticationCoreModule {
                 provide: AUTH_MODULE,
                 useFactory: options.useFactory,
             };
-        }
-
-        return {
-            inject: options.useExisting
-                ? [options.useExisting]
-                : options.useClass
-                    ? [options.useClass]
-                    : [],
-            provide: AUTH_MODULE,
-            useFactory: (optionsFactory: AuthenticationOptionsFactory) => optionsFactory.createAuth0Options(),
+        } else if (options.useExisting || options.useClass) {
+            const injectToken = options.useExisting ?? options.useClass;
+            if (!injectToken) {
+                throw new Error('A valid injection token is required for useExisting or useClass');
+            }
+            return {
+                inject: [injectToken],
+                provide: AUTH_MODULE,
+                useFactory: (optionsFactory: AuthenticationOptionsFactory) => optionsFactory.createAuth0Options(),
+            };
+        } else {
+            throw new Error('Invalid configuration for the authentication module');
         }
     }
 
-    /**
-     * Create async provider.
-     * 
-     * @param {AuthenticationAsyncOptions} options 
-     * 
-     * @return {Provider[]}
-     */
     private static createAsyncProviders(options: AuthenticationAsyncOptions): Provider[] {
-        if (options.useExisting || options.useFactory) {
-            return [this.createAsyncOptionsProvider(options)];
-        }
-
-        return [
-            this.createAsyncOptionsProvider(options),
-            {
+        const providers: Provider[] = [this.createAsyncOptionsProvider(options)];
+        if (options.useClass) {
+            providers.push({
                 provide: options.useClass,
-                useClass: options.useClass,
-                inject: [options.inject ?? []],
-            } as ClassProvider,
-        ];
+                useClass: options.useClass
+            });
+        }
+        return providers;
     }
 }

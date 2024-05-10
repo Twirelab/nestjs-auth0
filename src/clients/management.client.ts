@@ -1,4 +1,5 @@
-import { ManagementClient, ManagementClientOptions } from "auth0";
+import { ManagementClient, ManagementClientOptionsWithClientCredentials } from "auth0";
+// import type { ManagementClientBase } from "auth0";
 
 /**
  * Get Auth0 Authentication client.
@@ -7,6 +8,6 @@ import { ManagementClient, ManagementClientOptions } from "auth0";
  * 
  * @return {mana}
  */
-export function getManagementClient(options: ManagementClientOptions): ManagementClient {
+export function getManagementClient(options: ManagementClientOptionsWithClientCredentials): ManagementClient {
     return new ManagementClient(options);
 }

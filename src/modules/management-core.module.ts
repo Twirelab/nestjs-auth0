@@ -1,59 +1,39 @@
 import { Global, Module, DynamicModule, Provider, ClassProvider } from "@nestjs/common";
-import { ManagementClientOptions } from "auth0";
+import { ManagementClientOptions } from "auth0/dist/cjs/management/management-client-options";
 import { getManagementClient } from "../clients/management.client";
 import { ManagementAsyncOptions, ManagementOptionsFactory } from "../auth0.options";
 import { createManagementProvider } from "../providers/management.provider";
 import { MANG_CLIENT, MANG_MODULE } from "../constants";
+import { ManagementClientOptionsWithClientCredentials } from "auth0";
 
 @Global()
 @Module({})
 export class ManagementCoreModule {
-    /**
-     * For root.
-     * 
-     * @param {ManagementClientOptions} options 
-     * 
-     * @return {DynamicModule}
-     */
-    public static forRoot(options: ManagementClientOptions): DynamicModule {
+    public static forRoot(options: ManagementClientOptions & { clientId: string; clientAssertionSigningKey: string; }): DynamicModule {
         const provider = createManagementProvider(options);
 
         return {
             exports: [provider],
             module: ManagementCoreModule,
             providers: [provider],
-        }
+        };
     }
 
-    /**
-     * For root async.
-     * 
-     * @param {ManagementAsyncOptions} options 
-     * 
-     * @return {DynamicModule} 
-     */
     static forRootAsync(options: ManagementAsyncOptions): DynamicModule {
-        const provider: Provider<any> = {
+        const provider: Provider = {
             inject: [MANG_MODULE],
             provide: MANG_CLIENT,
-            useFactory: (authOptions: ManagementClientOptions) => getManagementClient(authOptions),
-        }
+            useFactory: (authOptions: ManagementClientOptionsWithClientCredentials) => getManagementClient(authOptions),
+        };
 
         return {
             exports: [provider],
             imports: options.imports,
             module: ManagementCoreModule,
             providers: [...this.createAsyncProviders(options), provider],
-        }
+        };
     }
 
-    /**
-     * Create async options provider.
-     * 
-     * @param {ManagementAsyncOptions} options 
-     * 
-     * @return {Provider}
-     */
     private static createAsyncOptionsProvider(options: ManagementAsyncOptions): Provider {
         if (options.useFactory) {
             return {
@@ -63,36 +43,26 @@ export class ManagementCoreModule {
             };
         }
 
+        const inject = options.useExisting ? [options.useExisting] : (options.useClass ? [options.useClass] : []);
+        if (inject.length === 0) {
+            throw new Error('Invalid configuration for the management module: A valid injection token is required');
+        }
         return {
-            inject: options.useExisting
-                ? [options.useExisting]
-                : options.useClass
-                    ? [options.useClass]
-                    : [],
+            inject,
             provide: MANG_MODULE,
             useFactory: (optionsFactory: ManagementOptionsFactory) => optionsFactory.createAuth0Options(),
-        }
+        };
     }
 
-    /**
-     * Create async provider.
-     * 
-     * @param {ManagementAsyncOptions} options 
-     * 
-     * @return {Provider[]}
-     */
     private static createAsyncProviders(options: ManagementAsyncOptions): Provider[] {
-        if (options.useExisting || options.useFactory) {
-            return [this.createAsyncOptionsProvider(options)];
-        }
-
-        return [
-            this.createAsyncOptionsProvider(options),
-            {
+        const providers: Provider[] = [this.createAsyncOptionsProvider(options)];
+        if (options.useClass) {
+            providers.push({
                 provide: options.useClass,
                 useClass: options.useClass,
-                inject: [options.inject ?? []],
-            } as ClassProvider,
-        ];
+                ...(options.inject ? { inject: options.inject } : {}),
+            } as ClassProvider);
+        }
+        return providers;
     }
 }
