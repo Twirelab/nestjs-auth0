@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module } from "@nestjs/common";
-import { ManagementClientOptions } from "auth0";
 import { ManagementAsyncOptions } from "../auth0.options";
 import { ManagementCoreModule } from "./management-core.module";
+import {ManagementClientOptions} from "auth0";
 
 @Global()
 @Module({})
@@ -13,7 +13,7 @@ export class ManagementModule {
      * 
      * @return {DynamicModule}
      */
-    public static forRoot(options: ManagementClientOptions): DynamicModule {
+    public static forRoot(options: ManagementClientOptions & { clientId: string; clientAssertionSigningKey: string; }): DynamicModule {
         return {
             module: ManagementModule,
             imports: [ManagementCoreModule.forRoot(options)],

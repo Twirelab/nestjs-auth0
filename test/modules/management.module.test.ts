@@ -1,14 +1,15 @@
 import { Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { ManagementClient, ManagementClientOptions } from "auth0";
-import { ManagementOptionsFactory } from "../../src/auth0.options";
+import { ManagementOptionsFactory } from "../../src";
 import { MANG_CLIENT } from "../../src/constants";
-import { ManagementModule } from "../../src/modules/management.module";
+import { ManagementModule } from "../../src";
 
-const testServiceOptions: ManagementClientOptions = {
+const testServiceOptions: ManagementClientOptions & { clientId: string; clientAssertionSigningKey: string; } = {
     domain: "test.com",
-    clientId: "testId",
-    clientSecret: "testSecret",
+    audience: "test",
+    clientId: "yourClientId",
+    clientAssertionSigningKey: "yourClientAssertionSigningKey",
 }
 
 describe("Authentication Module", () => {

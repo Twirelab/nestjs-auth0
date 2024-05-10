@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { AuthenticationClient, AuthenticationClientOptions } from "auth0";
-import { AuthenticationOptionsFactory } from "../../src/auth0.options";
+import { AuthenticationOptionsFactory } from "../../src";
 import { AUTH_CLIENT } from "../../src/constants";
-import { AuthenticationModule } from "../../src/modules/authentication.module";
+import { AuthenticationModule } from "../../src";
 
 const testServiceOptions: AuthenticationClientOptions = {
     domain: "test.com",

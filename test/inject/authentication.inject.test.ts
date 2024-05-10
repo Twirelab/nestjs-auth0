@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthenticationClient } from "auth0";
-import { InjectAuthentication } from "../../src/inject/authentication.inject"
-import { AuthenticationModule } from "../../src/modules/authentication.module";
+import { InjectAuthentication } from "../../src"
+import { AuthenticationModule } from "../../src";
 
 describe("Inject Authentication", () => {
     let module: TestingModule;
@@ -14,7 +14,7 @@ describe("Inject Authentication", () => {
 
     beforeEach(async () => {
         module = await Test.createTestingModule({
-            imports: [AuthenticationModule.forRoot({ domain: "test.com" })],
+            imports: [AuthenticationModule.forRoot({ domain: "test.com", clientId: "yourClientId" })],
             providers: [TestService],
         }).compile();
     });
