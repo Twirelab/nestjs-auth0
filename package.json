@@ -13,7 +13,8 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "tsc -p .",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "preinstall": "node scripts/check-node-version.js"
   },
   "repository": {
     "type": "git",
@@ -52,11 +53,15 @@
     "@nestjs/testing": "^11.1.6",
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
+    "semver": "^7.6.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0"
+  },
+  "engines": {
+    "node": "^20.19.0"
   }
 }
