@@ -1,34 +1,56 @@
 import { Injectable } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { ManagementClient } from "auth0";
-import { InjectManagement } from "../../src"
+import { InjectManagement } from "../../src";
 import { ManagementModule } from "../../src";
 
 describe("Inject Management", () => {
-    let module: TestingModule;
+  let module: TestingModule;
 
-    @Injectable()
-    class TestService {
-        public constructor(@InjectManagement() public readonly client: ManagementClient) { }
-    }
+  @Injectable()
+  class TestService {
+    public constructor(
+      @InjectManagement() public readonly client: ManagementClient
+    ) {}
+  }
 
-    beforeEach(async () => {
-        module = await Test.createTestingModule({
-            imports: [ManagementModule.forRoot({
-                domain: 'test.com',
-                audience: 'test',
-                clientId: 'yourClientId',
-                clientAssertionSigningKey: 'yourClientAssertionSigningKey'
-            })],
-            providers: [TestService],
-        }).compile();
+  beforeEach(async () => {
+    module = await Test.createTestingModule({
+      imports: [
+        ManagementModule.forRoot({
+          domain: "test.com",
+          audience: "test",
+          clientId: "yourClientId",
+          clientAssertionSigningKey: "yourClientAssertionSigningKey",
+        }),
+      ],
+      providers: [TestService],
+    }).compile();
+  });
+
+  describe("when decorating a class constructor parameter", () => {
+    it("should inject the management client", () => {
+      const testService = module.get(TestService);
+
+      expect(testService.client).toBeInstanceOf(ManagementClient);
     });
 
-    describe("when decorating a class constructor parameter", () => {
-        it("should inject the management client", () => {
-            const testService = module.get(TestService);
+    it("should have access to users API", () => {
+      const testService = module.get(TestService);
 
-            expect(testService.client).toBeInstanceOf(ManagementClient);
-        })
-    })
-})
+      expect(testService.client.users).toBeDefined();
+    });
+
+    it("should have access to clients API", () => {
+      const testService = module.get(TestService);
+
+      expect(testService.client.clients).toBeDefined();
+    });
+
+    it("should have access to connections API", () => {
+      const testService = module.get(TestService);
+
+      expect(testService.client.connections).toBeDefined();
+    });
+  });
+});
