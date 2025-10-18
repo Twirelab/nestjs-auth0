@@ -1,6 +1,6 @@
 {
   "name": "@twirelab/nestjs-auth0",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Auth0 wrapper for Nestjs",
   "main": "lib/index.js",
   "private": false,
