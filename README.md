@@ -136,13 +136,15 @@ More details you can find here: [auth0/node-auth0](https://github.com/auth0/node
 
 ## Migration from 0.x to 1.0
 
-This is a **breaking change** release that migrates from Auth0 v4 to v5. Here are the key changes:
+This is a **breaking change** release that migrates from Auth0 v4 to v5 and NestJS 10 to 11. Here are the key changes:
 
 ### Breaking Changes
 
 1. **Auth0 v5 Migration**: Updated from Auth0 v4 to v5
-2. **TypeScript Types**: Auth0 v5 includes built-in TypeScript types - you no longer need `@types/auth0`
-3. **API Changes**: Some method names and signatures have changed in Auth0 v5
+2. **NestJS v11 Migration**: Updated from NestJS 10 to 11
+3. **TypeScript Types**: Auth0 v5 includes built-in TypeScript types - you no longer need `@types/auth0`
+4. **API Changes**: Some method names and signatures have changed in Auth0 v5
+5. **Peer Dependencies**: Updated peer dependencies to require NestJS 11+
 
 ### Migration Steps
 
@@ -151,21 +153,25 @@ This is a **breaking change** release that migrates from Auth0 v4 to v5. Here ar
    ```bash
    npm uninstall @types/auth0
    npm install @twirelab/nestjs-auth0@^1.0.0 auth0@^5.0.0
+   npm install @nestjs/common@^11.0.0 @nestjs/core@^11.0.0
    ```
 
 2. **Update your code**:
 
    - Remove any imports of `@types/auth0`
    - Update method calls to match Auth0 v5 API (see [Auth0 v5 Migration Guide](https://github.com/auth0/node-auth0/blob/master/v5_MIGRATION_GUIDE.md))
+   - Update to NestJS 11 (see [NestJS Migration Guide](https://docs.nestjs.com/migration-guide))
    - The client injection and module configuration remain the same
 
-3. **Test thoroughly**: Ensure all Auth0 API calls work with the new v5 client
+3. **Test thoroughly**: Ensure all Auth0 API calls work with the new v5 client and NestJS 11
 
 ### What's New in v1.0
 
 - ✅ Full Auth0 v5 support
+- ✅ NestJS 11 compatibility
 - ✅ Built-in TypeScript types (no more `@types/auth0`)
 - ✅ Improved error handling
 - ✅ Better performance
 - ✅ Enhanced security features
 - ✅ Comprehensive test coverage
+- ✅ Updated peer dependencies for NestJS 11
