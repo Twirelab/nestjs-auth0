@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-09-21
+
+### Fixed
+
+- Removed the `preinstall` script. It ran on consumers' installs but referenced `scripts/` and `semver`, neither of which is published, so installing 1.0.0 could fail with `MODULE_NOT_FOUND`. The Node requirement is still declared in `engines`.
+
+### Security
+
+- Updated `auth0` to `^5.14.1`, which resolves the `uuid` advisory (GHSA-w5hq-g745-h8pq) in the production dependency tree.
+- Updated dev dependencies (`@nestjs/*`, `ts-jest`, `typescript`, `@types/jest`) and transitive packages; `npm audit` reports 0 vulnerabilities.
+- Publishing workflow now uses `npm ci`, runs `npm audit` and tests before publishing, publishes with npm provenance, and exposes `NPM_TOKEN` only to the publish step.
+- Added Dependabot for npm and GitHub Actions.
+
 ## [1.0.0] - 2025-01-27
 
 ### 🚀 Major Release - Auth0 v5 + NestJS 11 Migration
